@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微信跳转 - Misaka 御坂网络</title>
+    <link rel="shortcut icon" href="https://cdn.micono.eu.org/icon/logo.png" type="image/x-icon">
+    <script type="text/javascript">
+        ((c, l, a, r, i, t, y) => {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "spxwf705l5");
+    </script>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #e0f7ff, #ccecff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffffcc;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 32px;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        h2 {
+            color: #007acc;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #66cfff, #4db8ff);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+            text-decoration: none;
+            font-weight: 500;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .loading {
+            margin-top: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+
+            0%,
+            20% {
+                content: '';
+            }
+
+            40% {
+                content: '.';
+            }
+
+            60% {
+                content: '..';
+            }
+
+            80%,
+            100% {
+                content: '...';
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #003366, #002244);
+            }
+
+            .container {
+                background: #001a33cc;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            }
+
+            h2 {
+                color: #66ccff;
+            }
+
+            .description {
+                color: #aaa;
+            }
+
+            .btn {
+                background: linear-gradient(135deg, #66ccff, #4db8ff);
+                color: white;
+            }
+
+            .btn:hover {
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            }
+
+            .loading {
+                color: #666;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 20px;
+                padding: 24px;
+                min-width: auto;
+                width: calc(100% - 40px);
+                box-sizing: border-box;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>微信跳转</h2>
+        <div class="description">
+            即将为您跳转到微信应用<br>
+            如果没有自动跳转，请点击下方按钮
+        </div>
+        <button id="button" class="btn">打开微信小程序</button>
+        <div id="loading" class="loading" style="display: none;">正在跳转</div>
+    </div>
+
+    <script>
+        const to = () => {
+            const url = new URL(window.location.href);
+            const loadingEl = document.getElementById('loading');
+            loadingEl.style.display = 'block';
+
+            setTimeout(() => {
+                window.location.replace(`weixin://dl/business/?${url.searchParams.toString()}`);
+            }, 500);
+        };
+
+        window.onload = to;
+        document.getElementById('button').addEventListener('click', to);
+    </script>
+</body>
+
+</html>
