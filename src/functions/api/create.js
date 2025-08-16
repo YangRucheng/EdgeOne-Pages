@@ -36,7 +36,7 @@ export async function onRequestPost({ request, params, env }) {
     return new Response(JSON.stringify({
         "status": 0,
         "path": path,
-        "url": body.url
+        "url": body.url,
     }), {
         headers: {
             'Content-Type': 'application/json'

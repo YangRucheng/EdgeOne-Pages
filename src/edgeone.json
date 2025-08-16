@@ -1,0 +1,29 @@
+{
+    "name": "all-link",
+    "buildCommand": "",
+    "installCommand": "",
+    "outputDirectory": "",
+    "nodeVersion": "22.11.0",
+    "redirects": [],
+    "rewrites": [],
+    "headers": [
+        {
+            "source": "/*",
+            "headers": [
+                {
+                    "key": "X-Frame-Options",
+                    "value": "DENY"
+                }
+            ]
+        },
+        {
+            "source": "/s/*",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "max-age=31536000"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>正在加载...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://cdn.micono.eu.org/icon/logo.png" type="image/x-icon">
+    <script type="text/javascript">
+        ((c, l, a, r, i, t, y) => {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "spxwf705l5");
+    </script>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+    <main>
+        <div id="main" class="container" hidden>
+            <h2 id="title"></h2>
+            <div id="generator">
+                <div class="label">原始链接：</div>
+                <input type="text" id="input" placeholder="请输入要生成的原始链接~">
+
+                <div class="label"><span id="output-label"></span>：</div>
+                <input type="text" id="output" placeholder="点击复制" readonly>
+
+                <button class="btn" id="genBtn"></button>
+            </div>
+            <div id="msg" class="msg" hidden></div>
+        </div>
+        <a id="redirect" class="redirect" hidden target="_blank" referrerpolicy="no-referrer"></a>
+    </main>
+    <footer>
+        <a class="footer" target="_blank" href="https://beian.miit.gov.cn">湘ICP备2024051456号</a>
+        <a class="footer" target="_blank" href="mailto:admin@noink.cn">联系我们</a>
+    </footer>
+
+    <script>
+        const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        /* 规范化 URL */
+        const normalizeUrl = url =>
+            url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
+
+        /* 生成短链接 */
+        const generateShortLink = () => {
+            let text = document.getElementById("input").value.trim();
+            if (!text) return showMessage("欸~ 主人要先输入原始链接哦~♡");
+            text = normalizeUrl(text);
+
+            fetch("/api/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: text })
+            })
+                .then(resp => resp.json())
+                .then(res => {
+                    if (res.status == 0) {
+                        const url = `${location.origin}/s/${res.path}`;
+                        document.getElementById("output").value = url;
+                    } else {
+                        showMessage(res.msg);
+                    }
+                })
+        };
+
+        /* Base36 编码 */
+        const encodeBase36 = str => {
+            const bytes = new TextEncoder().encode(str);
+            let num = 0n;
+            for (let b of bytes) num = (num << 8n) + BigInt(b);
+            return num.toString(36).toUpperCase();
+        };
+
+        /* Base36 解码 */
+        const decodeBase36 = b36 => {
+            let num = 0n;
+            for (const c of b36) num = num * 36n + BigInt(chars.indexOf(c));
+            let hex = num.toString(16);
+            if (hex.length % 2) hex = "0" + hex;
+            const bytes = new Uint8Array(hex.length / 2);
+            for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+            return new TextDecoder().decode(bytes);
+        };
+
+        /* 生成长链接 */
+        const generateLongLink = () => {
+            const randomPad = len => {
+                let pad = '';
+                for (let i = 0; i < Math.max(len, 10); i++)
+                    pad += chars[Math.floor(Math.random() * chars.length)];
+                return pad;
+            };
+
+            let text = document.getElementById("input").value.trim();
+            if (!text) return showMessage("欸~ 主人要先输入原始链接哦~♡");
+            text = normalizeUrl(text);
+            const encoded = encodeBase36(text);
+            document.getElementById("output").value = `${location.origin}${location.pathname}?d=${encoded}&pad=${randomPad(120 - encoded.length)}`;
+        };
+
+        /* 显示消息 */
+        const showMessage = (msg, color = null) => {
+            document.getElementById("msg").innerText = msg;
+            if (color) document.getElementById("msg").style.color = color;
+            document.getElementById("msg").hidden = false;
+            setTimeout(() => document.getElementById("msg").hidden = true, 3000);
+        }
+
+        /* Load 事件 */
+        window.onload = () => {
+            const url = new URL(window.location.href);
+            const host = window.location.host;
+            if (host.endsWith(".edgeone.run")) {
+                window.location.replace("https://s.noink.cn");
+            }
+            if (host == "s.noink.cn") {
+                document.title = "短链接生成器";
+                document.getElementById("title").innerText = "短链接生成器";
+                document.getElementById("output-label").innerText = "短链接";
+                document.getElementById("genBtn").innerText = "生成短链接";
+                document.getElementById("genBtn").onclick = generateShortLink;
+                document.getElementById("main").hidden = false;
+            }
+            if (host == "l.noink.cn") {
+                const params = new URLSearchParams(location.search);
+                const d = params.get("d") || params.get("D") || null;
+
+                if (!d) {
+                    document.title = "长链接生成器";
+                    document.getElementById("title").innerText = "长链接生成器";
+                    document.getElementById("output-label").innerText = "长链接";
+                    document.getElementById("genBtn").innerText = "生成长链接";
+                    document.getElementById("genBtn").onclick = generateLongLink;
+                    document.getElementById("main").hidden = false;
+                } else {
+                    const decoded = normalizeUrl(decodeBase36(d));
+                    document.getElementById("redirect").href = decoded;
+                    document.getElementById("redirect").innerText = `点击前往原始链接`;
+                    document.getElementById("redirect").hidden = false;
+                }
+            }
+            if (host == "w.noink.cn") {
+                const redirectLink = `weixin://dl/business/?${url.searchParams.toString()}`
+                window.location.replace(redirectLink);
+                document.getElementById("redirect").href = redirectLink;
+                document.getElementById("redirect").innerText = `点击前往微信小程序`;
+                document.getElementById("redirect").hidden = false;
+            }
+
+            document.getElementById('output').onclick = () => {
+                const value = document.getElementById('output').value;
+                if (!value) return;
+                navigator.clipboard.writeText(value);
+                showMessage("复制成功！")
+            };
+        }
+    </script>
+</body>
+
+</html>

@@ -3,10 +3,12 @@ body {
     background: linear-gradient(135deg, #e0f7ff, #ccecff);
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
+}
+
+main {
+    width: calc(100% - 40px);
+    margin: 20px;
 }
 
 .container {
@@ -14,7 +16,7 @@ body {
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     padding: 24px 32px;
-    margin: 20px;
+    margin: 20px auto;
     max-width: 420px;
     text-align: center;
 }
@@ -54,6 +56,29 @@ input:focus {
     cursor: pointer;
     transition: transform 0.15s ease;
     text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+}
+
+.redirect {
+    background: linear-gradient(135deg, #66cfff, #4db8ff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    margin: 20px auto;
+    width: min(300px, calc(100vw - 40px));
+}
+
+.redirect:not([hidden]) {
+    display: block;
+    text-align: center;
 }
 
 .btn:hover {
@@ -66,6 +91,29 @@ input:focus {
     color: #555;
     margin-bottom: 4px;
     text-align: left;
+}
+
+.msg {
+    text-align: center;
+    font-size: 14px;
+    margin: 15px auto;
+    color: black;
+}
+
+footer {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    padding: 20px;
+    width: 100%;
+    gap: 15px;
+    justify-content: center;
+}
+
+a.footer {
+    font-size: min(2.5vw, 12px);
+    color: #007acc;
+    text-decoration: none;
 }
 
 @media (max-width: 480px) {
@@ -99,7 +147,8 @@ input:focus {
         box-shadow: 0 0 5px rgba(102, 204, 255, 0.5);
     }
 
-    .btn {
+    .btn,
+    .redirect {
         background: linear-gradient(135deg, #66ccff, #4db8ff);
         color: white;
     }
@@ -110,5 +159,13 @@ input:focus {
 
     .label {
         color: #aaa;
+    }
+
+    .msg {
+        color: white;
+    }
+
+    a.footer {
+        color: #66ccff;
     }
 }
