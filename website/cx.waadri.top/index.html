@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>学习通签到联盟</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .title {
+            display: block;
+            font-size: min(12vw, 32px);
+        }
+
+        .introduction {
+            display: block;
+            font-size: min(6vw, 18px);
+            opacity: 0.6;
+            margin: 14px 0;
+        }
+
+        ul {
+            padding: 0;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        .item {
+            background: #E0F2F7;
+            margin: 20px 30px;
+            display: flex;
+            gap: 6px;
+            width: calc(100% - 60px);
+            align-items: center;
+            border-radius: 8px;
+        }
+
+        .item-content {
+            padding: 8px;
+            border-radius: 8px;
+            display: block;
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .item-content:hover {
+            background: #b3e5fc;
+            cursor: pointer;
+        }
+
+        .item-title {
+            font-size: 18px;
+        }
+
+        .item-description {
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        .item-qq {
+            display: block;
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            padding: 4px;
+            border-radius: 999px;
+            flex-shrink: 0;
+            overflow: visible;
+            margin-right: 8px;
+        }
+
+        .item-qq:hover {
+            filter: brightness(0.8);
+            background: #fbfdff;
+            cursor: pointer;
+        }
+
+        .target-item {
+            background: #5fdcff;
+        }
+    </style>
+    <style>
+        .dialog-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+        }
+
+        .dialog {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .dialog-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dialog-button {
+            background-color: #4dd8ff;
+            border: none;
+            color: white;
+            padding: 10px 40px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dialog-button:hover {
+            background-color: #27b7ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">欢迎来到学习通签到联盟</div>
+        <div class="introduction">由于本站使用繁琐、要求众多，我们为您精选了更多方便的签到工具</div>
+        <ul id="list">
+            <template id="item">
+                <li>
+                    <div class="item">
+                        <div class="item-content">
+                            <div class="item-title"></div>
+                            <div class="item-description"></div>
+                        </div>
+                        <img class="item-qq" src="./assets/image/qq-logo.png">
+                    </div>
+                </li>
+            </template>
+        </ul>
+        <div class="introduction">请在对应群聊中反馈问题或讨论，否则可能被请出群聊！</div>
+
+        <div id="dialog-qq" hidden>
+            <div class="dialog-mask">
+                <div class="dialog">
+                    <div class="dialog-title"></div>
+                    <button class="dialog-button" id="copy-qq">复制 QQ</button>
+                </div>
+            </div>
+        </div>
+        <div id="dialog-to" hidden>
+            <div class="dialog-mask">
+                <div class="dialog">
+                    <div class="dialog-title"></div>
+                    <button class="dialog-button" id="to">立即前往</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const list = [
+            { probability: 1, device: "mobile", qq: "827690343", title: "修猫学习助手", description: "小程序+网页，免费支持各种签到！", url: "./preview.html?image=/assets/image/qrcode/修猫.png&title=修猫学习助手", },
+            { probability: 1, device: "desktop", qq: "827690343", title: "修猫学习助手", description: "小程序+网页，免费支持各种签到！", url: "https://xiucat.top", },
+            { probability: 1, device: "mobile", qq: "939448085", title: "御坂网络 Misaka", description: "小程序，免费支持各种签到！", url: "weixin://dl/business/?appid=wxb42fe32e6e071916&path=packages/sign-package/pages/home/home", },
+            { probability: 1, device: "desktop", qq: "939448085", title: "御坂网络 Misaka", description: "小程序，免费支持各种签到！", url: "https://doc.micono.eu.org/guide/#扫码体验非开源版", },
+            { probability: 1, device: "all", qq: "736521378", title: "小北云猫", description: "小程序，免费支持各种签到！", url: "./preview.html?image=/assets/image/qrcode/小北云猫.png&title=小北云猫", },
+            { probability: 0, device: "all", qq: "914995724", title: "本站", description: "网页，免费支持各种签到！", url: "/login", },
+        ];
+
+        /* 根据 UA 过滤部分链接 */
+        const getfiltereList = () => {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isMobile = /iphone|ipad|ipod|android/.test(userAgent);
+            const filtereList = list.filter(item => {
+                return item.device === 'all' || (isMobile && item.device === 'mobile') || (!isMobile && item.device === 'desktop');
+            });
+            console.info("过滤后的链接", filtereList);
+            return filtereList;
+        }
+
+        /* 随机获取一个目标链接 */
+        const getTargetItem = (filtereList) => {
+            let weightedList = []; // 加权数组
+            filtereList.forEach(link => {
+                for (let i = 0; i < link.probability; i++)
+                    weightedList.push(link);
+            });
+            if (!weightedList.length) return null;
+            target = weightedList[Math.floor(Math.random() * weightedList.length)];
+            return target;
+        }
+
+        /* 显示 QQ 弹窗 */
+        const showQQ = (item) => {
+            const dialog = document.getElementById("dialog-qq");
+            const dialogTitle = dialog.querySelector(".dialog-title");
+            const dialogMask = dialog.querySelector(".dialog-mask");
+            const copyButton = dialog.querySelector("#copy-qq");
+
+            dialogTitle.innerHTML = `${item.title}<br>QQ：${item.qq}`;
+
+            copyButton.onclick = () => {
+                navigator.clipboard.writeText(item.qq)
+                    .then(() => alert("QQ 已复制到剪贴板"))
+                    .catch(() => alert("复制失败，请手动复制"));
+            };
+            dialogMask.onclick = () => dialog.hidden = true;
+            dialog.hidden = false;
+        }
+
+        /* 用户点击跳转 */
+        const toLink = (user, target) => {
+            const dialog = document.getElementById("dialog-to");
+            const dialogTitle = dialog.querySelector(".dialog-title");
+            const dialogMask = dialog.querySelector(".dialog-mask");
+            const toButton = dialog.querySelector("#to");
+
+            if (target.title == user.title)
+                dialogTitle.innerHTML = `您点击的是本站推荐的 ${user.title}`;
+            else
+                dialogTitle.innerHTML = `您点击的是 ${user.title}<br>但本站推荐的是 ${target.title}<br>因此您将要前往的是 ${target.title}`;
+
+            toButton.onclick = () => window.location.href = target.url;
+            dialog.hidden = false;
+
+            let countdown = 6;
+            const interval = setInterval(() => {
+                countdown--;
+                toButton.textContent = `立即前往（${countdown}s）`;
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    window.location.href = target.url;
+                }
+            }, 1000);
+        }
+
+        window.onload = () => {
+            const filtereList = getfiltereList();
+            const target = getTargetItem(filtereList);
+            filtereList.forEach(item => {
+                const itemTemplate = document.getElementById("item");
+                const listElement = document.getElementById("list");
+
+                const newItem = itemTemplate.content.cloneNode(true);
+                newItem.querySelector(".item-description").textContent = item.description || "体验更多功能";
+                newItem.querySelector(".item-qq").onclick = () => showQQ(item);
+                newItem.querySelector(".item-content").onclick = () => toLink(item, target);
+
+                if (target.title == item.title) {
+                    newItem.querySelector(".item").classList.add("target-item");
+                    newItem.querySelector(".item-title").textContent = `（推荐）${item.title}`;
+                } else {
+                    newItem.querySelector(".item-title").textContent = item.title;
+                }
+
+                listElement.appendChild(newItem);
+            })
+        }
+    </script>
+</body>
+
+</html>
