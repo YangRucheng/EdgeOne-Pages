@@ -1,0 +1,50 @@
+[
+    {
+        "probability": 1,
+        "device": "mobile",
+        "qq": "827690343",
+        "title": "修猫学习助手",
+        "description": "小程序+网页，免费支持各种签到！",
+        "url": "./preview.html?image=/assets/image/qrcode/修猫.png&title=修猫学习助手"
+    },
+    {
+        "probability": 1,
+        "device": "desktop",
+        "qq": "827690343",
+        "title": "修猫学习助手",
+        "description": "小程序+网页，免费支持各种签到！",
+        "url": "https://xiucat.top"
+    },
+    {
+        "probability": 1,
+        "device": "mobile",
+        "qq": "939448085",
+        "title": "御坂网络 Misaka",
+        "description": "小程序，免费支持各种签到！",
+        "url": "weixin://dl/business/?appid=wxb42fe32e6e071916&path=packages/sign-package/pages/home/home"
+    },
+    {
+        "probability": 1,
+        "device": "desktop",
+        "qq": "939448085",
+        "title": "御坂网络 Misaka",
+        "description": "小程序，免费支持各种签到！",
+        "url": "https://doc.micono.eu.org/guide/#扫码体验非开源版"
+    },
+    {
+        "probability": 1,
+        "device": "all",
+        "qq": "736521378",
+        "title": "小北云猫",
+        "description": "小程序，免费支持各种签到！",
+        "url": "./preview.html?image=/assets/image/qrcode/小北云猫.png&title=小北云猫"
+    },
+    {
+        "probability": 0,
+        "device": "all",
+        "qq": "914995724",
+        "title": "本站",
+        "description": "网页，免费支持各种签到！服务器还在睡觉，敬请期待哦 ~",
+        "url": "/login"
+    }
+]
