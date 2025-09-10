@@ -80,7 +80,7 @@ window.onload = () => {
         return;
     }
 
-    fetch("/assets/tools.json")
+    fetch(`/assets/tools.json?_t=${Date.now()}`)
         .then(resp => resp.json())
         .then(res => list = res)
         .then(() => {
