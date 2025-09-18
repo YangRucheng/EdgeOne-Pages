@@ -16,8 +16,8 @@ window.onload = () => {
 			miit.innerText = "湘ICP备2024051456号",
 			mps.innerText = "湘公网安备43040002000203号";
 	else if (location.hostname.endsWith("noink.cn"))
-		name.innerText = document.title = "无墨",
-			miit.innerText = "",
+		name.innerText = document.title = "无墨姬",
+			miit.innerText = "湘ICP备2022020305号",
 			mps.innerText = "";
 	else if (location.hostname.endsWith("19890605.xyz"))
 		name.innerText = document.title = "长安街上的那个人",
